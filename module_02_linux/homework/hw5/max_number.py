@@ -13,15 +13,27 @@ Endpoint должен вернуть текст «Максимальное пе�
 
 """
 
-from flask import Flask
+from flask import Flask, abort
 
 app = Flask(__name__)
 
 
-@app.route("/max_number/...")
-def max_number():
-    ...
+@app.route("/max_number/<path:numbers>", methods=['GET'])
+def max_number(numbers):
+    numbers_list = numbers.split('/')
+
+    try:
+        numbers_list = [int(num) for num in numbers_list]
+    except ValueError:
+        abort(400, description="Все параметры должны быть целыми числами.")
+
+    max_number = max(numbers_list)
+
+    response = f"Максимальное переданное число <i>{max_number}</i>"
+
+    return response
 
 
 if __name__ == "__main__":
     app.run(debug=True)
+
