@@ -26,15 +26,36 @@ hello wo
 hello world!
 """
 
-from flask import Flask
+from flask import Flask, abort, Response
+import os
 
 app = Flask(__name__)
 
 
 @app.route("/head_file/<int:size>/<path:relative_path>")
 def head_file(size: int, relative_path: str):
-    ...
+    abs_path = os.path.abspath(relative_path)
+
+    if not os.path.isfile(abs_path):
+        abort(404, description="Файл не найден.")
+
+    result_text = ""
+    result_size = 0
+    try:
+        with open(abs_path, 'r', encoding='utf-8') as file:
+            result_text = file.read(size)
+            result_size = len(result_text)
+    except Exception as e:
+        abort(500, description="Ошибка при чтении файла.")
+
+    response_text = (
+        f"<b>{abs_path}</b> {result_size}<br>"
+        f"{result_text}"
+    )
+
+    return Response(response_text, content_type='text/html')
 
 
 if __name__ == "__main__":
     app.run(debug=True)
+
