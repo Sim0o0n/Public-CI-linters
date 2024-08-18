@@ -21,7 +21,7 @@ app = Flask(__name__)
 
 class RegistrationForm(FlaskForm):
     email = StringField(validators=[InputRequired(), Email()])
-    phone = IntegerField(validators=[InputRequired(), NumberLength(min=1000000000, max=8999999999)])
+    phone = IntegerField(validators=[InputRequired(), NumberLength(min=10, max=10)])
     name = StringField(validators=[InputRequired()])
     address = StringField(validators=[InputRequired()])
     index = IntegerField(validators=[InputRequired()])

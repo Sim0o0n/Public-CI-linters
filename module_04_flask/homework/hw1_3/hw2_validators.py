@@ -23,17 +23,12 @@ def number_length(min: int, max: int, message: Optional[str] = None):
 
 
 class NumberLength:
-    def __init__(self, min: int = 1000000000, max: int = 9999999999, message: Optional[str] = None):
+    def __init__(self, min: int, max: int, message=None):
         self.min = min
         self.max = max
-        self.message = message or f"Число должно быть в диапазоне от {self.min} до {self.max} и содержать ровно 10 цифр."
+        self.message = message
 
-    def __call__(self, form, field):
-        value = field.data
-
-        if len(str(value)) != 10:
-            raise ValidationError("Число должно содержать ровно 10 цифр.")
-
-        if not (self.min <= value <= self.max):
+    def __call__(self, form: FlaskForm, field: Field):
+        if not self.min <= (len(str(field.data))) <= self.max:
             raise ValidationError(self.message)
 
