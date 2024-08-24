@@ -10,8 +10,10 @@
 которая на вход принимает порт и запускает по нему сервер. Если порт будет занят,
 она должна найти процесс по этому порту, завершить его и попытаться запустить сервер ещё раз.
 """
+import os
+import signal
 from typing import List
-
+import subprocess
 from flask import Flask
 
 app = Flask(__name__)
@@ -27,7 +29,16 @@ def get_pids(port: int) -> List[int]:
         raise ValueError
 
     pids: List[int] = []
-    ...
+    try:
+        result = subprocess.check_output(["lsof", "-i", f":{port}"])
+        lines = result.decode().splitlines()
+
+        for line in lines[1:]:
+            parts = line.split()
+            pids.append(int(parts[1]))
+
+    except subprocess.CalledProcessError:
+        pass
     return pids
 
 
@@ -37,7 +48,12 @@ def free_port(port: int) -> None:
     @param port: порт
     """
     pids: List[int] = get_pids(port)
-    ...
+    for pid in pids:
+        try:
+            os.kill(pid, signal.SIGTERM)
+            print(f"Процесс с PID {pid} завершен")
+        except OSError as e:
+            print(f"Ошибка при завершении процесса с PID {pid}: {e}")
 
 
 def run(port: int) -> None:
@@ -48,6 +64,10 @@ def run(port: int) -> None:
     """
     free_port(port)
     app.run(port=port)
+    try:
+        app.run(port=port)
+    except OSError as e:
+        print(f"Ошибка при запуске сервера: {e}")
 
 
 if __name__ == '__main__':

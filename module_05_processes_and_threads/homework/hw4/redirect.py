@@ -9,14 +9,21 @@
 
 from types import TracebackType
 from typing import Type, Literal, IO
-
+import sys
 
 class Redirect:
     def __init__(self, stdout: IO = None, stderr: IO = None) -> None:
-        ...
+        self.new_stdout = stdout
+        self.new_stderr = stderr
+        self.old_stdout = sys.stdout
+        self.old_stderr = sys.stderr
 
     def __enter__(self):
-        ...
+        if self.new_stdout is not None:
+            sys.stdout = self.new_stdout
+        if self.new_stderr is not None:
+            sys.stderr = self.new_stderr
+        return self
 
     def __exit__(
             self,
@@ -24,4 +31,8 @@ class Redirect:
             exc_val: BaseException | None,
             exc_tb: TracebackType | None
     ) -> Literal[True] | None:
-        ...
+        if self.new_stdout is not None:
+            sys.stdout = self.old_stdout
+        if self.new_stderr is not None:
+            sys.stderr = self.old_stderr
+        return False
