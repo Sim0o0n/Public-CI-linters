@@ -18,13 +18,31 @@
 import getpass
 import hashlib
 import logging
+import re
 
 logger = logging.getLogger("password_checker")
+logger.setLevel(logging.INFO)
 
+file_handler = logging.FileHandler("stderr.txt")
+formatter = logging.Formatter('%(asctime)s %(message)s', datefmt='%H:%M:%S')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
+def load_english_words(file_path: str) -> set:
+    with open(file_path, 'r') as file:
+        words = {line.strip().lower() for line in file if len(line.strip()) > 4}
+    return words
+
+english_words = load_english_words('/usr/share/dict/words')
 
 def is_strong_password(password: str) -> bool:
-    return True
+    password_lower = password.lower()
+    words_in_password = re.findall(r'\b\w+\b', password_lower)
 
+    for word in words_in_password:
+        if word in english_words:
+            return False
+    return True
 
 def input_and_check_password() -> bool:
     logger.debug("Начало input_and_check_password")
@@ -39,7 +57,6 @@ def input_and_check_password() -> bool:
 
     try:
         hasher = hashlib.md5()
-
         hasher.update(password.encode("latin-1"))
 
         if hasher.hexdigest() == "098f6bcd4621d373cade4e832627b4f6":
@@ -49,9 +66,7 @@ def input_and_check_password() -> bool:
 
     return False
 
-
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
     logger.info("Вы пытаетесь аутентифицироваться в Skillbox")
     count_number: int = 3
     logger.info(f"У вас есть {count_number} попыток")
@@ -63,3 +78,4 @@ if __name__ == "__main__":
 
     logger.error("Пользователь трижды ввёл не правильный пароль!")
     exit(1)
+
