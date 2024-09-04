@@ -71,7 +71,35 @@ def get_tree(max_depth: int, level: int = 1) -> Optional[BinaryTreeNode]:
 
 
 def restore_tree(path_to_log_file: str) -> BinaryTreeNode:
-    pass
+    node_info = {}
+    children_info = {}
+
+    with open(path_to_log_file, 'r') as file:
+        for line in file:
+            parts = line.strip().split()
+            if len(parts) < 2:
+                continue
+
+            node_val = int(parts[0].split('[')[-1][:-1])
+            children_vals = [int(c.split('[')[-1][:-1]) for c in parts[1:]]
+
+            if node_val not in node_info:
+                node_info[node_val] = BinaryTreeNode(val=node_val)
+
+            children_info[node_val] = children_vals
+
+    for node_val, children_vals in children_info.items():
+        node = node_info[node_val]
+        if len(children_vals) > 0:
+            if children_vals[0] not in node_info:
+                node_info[children_vals[0]] = BinaryTreeNode(val=children_vals[0])
+            node.left = node_info[children_vals[0]]
+        if len(children_vals) > 1:
+            if children_vals[1] not in node_info:
+                node_info[children_vals[1]] = BinaryTreeNode(val=children_vals[1])
+            node.right = node_info[children_vals[1]]
+
+    return node_info[1]
 
 
 if __name__ == "__main__":

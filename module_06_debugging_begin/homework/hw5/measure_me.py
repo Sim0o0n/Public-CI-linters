@@ -8,8 +8,24 @@
 """
 import logging
 import random
+from datetime import datetime
 from typing import List
+import os
+import time
 
+
+if os.path.exists('measure_me.log'):
+    os.remove('measure_me.log')
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+    handlers=[
+        logging.FileHandler("measure_me.log"),
+        logging.StreamHandler()
+    ]
+)
 logger = logging.getLogger(__name__)
 
 
@@ -60,7 +76,9 @@ def measure_me(nums: List[int]) -> List[List[int]]:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level="DEBUG")
+    logging.basicConfig(
+        level=logging.DEBUG
+    )
     for it in range(15):
         data_line = get_data_line(10 ** 3)
         measure_me(data_line)
