@@ -1,9 +1,10 @@
 from typing import Union, Callable
 from operator import sub, mul, truediv, add
 import logging
+from logger_helper import LevelFileHandler
 
 
-logger = logging.getLogger('hw1_utils_logger')
+logger = logging.getLogger('hw3_utils_logger')
 logger.setLevel(logging.DEBUG)
 
 console_handler = logging.StreamHandler()
@@ -12,12 +13,19 @@ console_handler.setLevel(logging.INFO)
 file_handler = logging.FileHandler("utils_errors.log")
 file_handler.setLevel(logging.ERROR)
 
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+debug_file_handler = LevelFileHandler(logging.DEBUG, 'utils_debug.log')
+error_file_handler = LevelFileHandler(logging.ERROR, 'utils_error.log')
+
+formatter = logging.Formatter('%(levelname)s | %(name)s | %(asctime)s | %(lineno)d | %(message)s')
 console_handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)
+debug_file_handler.setFormatter(formatter)
+error_file_handler.setFormatter(formatter)
 
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
+logger.addHandler(debug_file_handler)
+logger.addHandler(error_file_handler)
 
 OPERATORS = {
     '+': add,

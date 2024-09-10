@@ -3,21 +3,16 @@ from operator import sub, mul, truediv, add
 import logging
 
 
-logger = logging.getLogger('hw1_utils_logger')
-logger.setLevel(logging.DEBUG)
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(levelname)s | %(name)s | %(asctime)s | %(lineno)d | %(message)s',
+    handlers=[
+        logging.StreamHandler()
+    ]
+)
 
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)
 
-file_handler = logging.FileHandler("utils_errors.log")
-file_handler.setLevel(logging.ERROR)
-
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-console_handler.setFormatter(formatter)
-file_handler.setFormatter(formatter)
-
-logger.addHandler(console_handler)
-logger.addHandler(file_handler)
+logger = logging.getLogger('hw2_utils_logger')
 
 OPERATORS = {
     '+': add,

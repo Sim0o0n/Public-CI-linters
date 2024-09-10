@@ -3,24 +3,18 @@ from utils import string_to_operator
 import logging
 
 def conf_logger():
-    logger = logging.getLogger('hw1_app_logger')
-    logger.setLevel(logging.DEBUG)
 
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format='%(levelname)s | %(name)s | %(asctime)s | %(lineno)d | %(message)s',
+        handlers=[
+            logging.StreamHandler()
+        ]
+    )
 
-    file_handler = logging.FileHandler("app_errors.log")
-    file_handler.setLevel(logging.ERROR)
-
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    console_handler.setFormatter(formatter)
-    file_handler.setFormatter(formatter)
-
-    logger.addHandler(console_handler)
-    logger.addHandler(file_handler)
 
 def calc(args):
-    logger = logging.getLogger('hw1_app_logger')
+    logger = logging.getLogger('hw2_app_logger')
     logger.info(f"Arguments: {args}")
 
     num_1 = args[0]
@@ -52,7 +46,7 @@ if __name__ == '__main__':
     try:
         calc(sys.argv[1:])
     except Exception as e:
-        logger = logging.getLogger('hw1_app_logger')
+        logger = logging.getLogger('hw2_app_logger')
         logger.error("An error occurred while executing the calculation")
         logger.exception(e)
 

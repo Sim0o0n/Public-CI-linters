@@ -1,26 +1,10 @@
 import sys
 from utils import string_to_operator
 import logging
-
-def conf_logger():
-    logger = logging.getLogger('hw1_app_logger')
-    logger.setLevel(logging.DEBUG)
-
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
-
-    file_handler = logging.FileHandler("app_errors.log")
-    file_handler.setLevel(logging.ERROR)
-
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    console_handler.setFormatter(formatter)
-    file_handler.setFormatter(formatter)
-
-    logger.addHandler(console_handler)
-    logger.addHandler(file_handler)
+from logging_config import setup_logging
 
 def calc(args):
-    logger = logging.getLogger('hw1_app_logger')
+    logger = logging.getLogger('hw4_app_logger')
     logger.info(f"Arguments: {args}")
 
     num_1 = args[0]
@@ -43,17 +27,15 @@ def calc(args):
 
     result = operator_func(num_1, num_2)
 
-    logger.info(f"Result:{result}")
+    logger.info(f"Result: {result}")
     logger.debug(f"{num_1} {operator} {num_2} = {result}")
 
-
 if __name__ == '__main__':
-    conf_logger()
+    setup_logging()
     try:
         calc(sys.argv[1:])
     except Exception as e:
-        logger = logging.getLogger('hw1_app_logger')
+        logger = logging.getLogger('hw4_app_logger')
         logger.error("An error occurred while executing the calculation")
         logger.exception(e)
-
     calc('2+3')

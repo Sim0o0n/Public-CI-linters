@@ -1,9 +1,11 @@
+import contextlib
 import sys
 from utils import string_to_operator
 import logging
+import logging_tree
 
 def conf_logger():
-    logger = logging.getLogger('hw1_app_logger')
+    logger = logging.getLogger('hw6_app_logger')
     logger.setLevel(logging.DEBUG)
 
     console_handler = logging.StreamHandler()
@@ -20,7 +22,7 @@ def conf_logger():
     logger.addHandler(file_handler)
 
 def calc(args):
-    logger = logging.getLogger('hw1_app_logger')
+    logger = logging.getLogger('hw6_app_logger')
     logger.info(f"Arguments: {args}")
 
     num_1 = args[0]
@@ -49,11 +51,15 @@ def calc(args):
 
 if __name__ == '__main__':
     conf_logger()
-    try:
-        calc(sys.argv[1:])
-    except Exception as e:
-        logger = logging.getLogger('hw1_app_logger')
-        logger.error("An error occurred while executing the calculation")
-        logger.exception(e)
+#    try:
+#        calc(sys.argv[1:])
+#    except Exception as e:
+#        logger = logging.getLogger('hw6_app_logger')
+#        logger.error("An error occurred while executing the calculation")
+#        logger.exception(e)
+
+    with open("logging_tree.txt", "w") as f:
+        with contextlib.redirect_stdout(f):
+            logging_tree.printout()
 
     calc('2+3')

@@ -1,23 +1,23 @@
 from typing import Union, Callable
 from operator import sub, mul, truediv, add
 import logging
+from logging.handlers import TimedRotatingFileHandler
 
-
-logger = logging.getLogger('hw1_utils_logger')
+logger = logging.getLogger('hw7_utils_logger')
 logger.setLevel(logging.DEBUG)
 
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)
+handler = TimedRotatingFileHandler(
+    'utils.log',
+    when='H',
+    interval=10,
+    backupCount=0
+)
+handler.setLevel(logging.INFO)
 
-file_handler = logging.FileHandler("utils_errors.log")
-file_handler.setLevel(logging.ERROR)
+formatter = logging.Formatter('%(levelname)s | %(name)s | %(asctime)s | %(lineno)d | %(message)s')
+handler.setFormatter(formatter)
 
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-console_handler.setFormatter(formatter)
-file_handler.setFormatter(formatter)
-
-logger.addHandler(console_handler)
-logger.addHandler(file_handler)
+logger.addHandler(handler)
 
 OPERATORS = {
     '+': add,
@@ -27,7 +27,6 @@ OPERATORS = {
 }
 
 Numeric = Union[int, float]
-
 
 def string_to_operator(value: str) -> Callable[[Numeric, Numeric], Numeric]:
     """
