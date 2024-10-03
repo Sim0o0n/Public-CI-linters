@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ book.title }}</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+</head>
+<body>
+
+<h1>{{ book.title }}</h1>
+<p><strong>Author:</strong> {{ book.author }}</p>
+<p><strong>Views:</strong> {{ book.view_count }}</p>
+
+<a href="{{ url_for('all_books') }}">Back to all books</a>
+
+</body>
+</html>

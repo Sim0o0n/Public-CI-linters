@@ -61,3 +61,5 @@ def get_all_books() -> List[Book]:
             """
         )
         return [Book(*row) for row in cursor.fetchall()]
+
+
