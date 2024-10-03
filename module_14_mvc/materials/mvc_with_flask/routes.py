@@ -5,10 +5,13 @@ from models import init_db, get_all_books, DATA
 
 app: Flask = Flask(__name__)
 
-
+BOOKS = [{'id':0,'title': 'A Byte of Python','author': 'Swaroop C. H.'},
+         {'id':1,'title': 'Moby-Dick; or, The Whale','author' : 'Herman Melville'},
+         {'id':2,'title': 'War and Peace','author': 'Leo Tolstoy'}
+]
 def _get_html_table_for_books(books: List[dict]) -> str:
     table = """
-<table>
+<table class="customTable">
     <thead>
     <tr>
         <th>ID</td>
@@ -31,15 +34,26 @@ def _get_html_table_for_books(books: List[dict]) -> str:
 
 @app.route('/books')
 def all_books() -> str:
-    return render_template(
-        'index.html',
-        books=get_all_books(),
+   return render_template(
+     'index.html',
+     books=get_all_books(),
     )
+   #  return """
+   #      <html>
+   #          <head>
+   #          </head>
+   #          <body>
+   #              <h1>Books:</h1>
+   #              {table}
+   #          </body>
+   #      </html>
+   #      """.format(table=_get_html_table_for_books(BOOKS))
+
 
 
 @app.route('/books/form')
 def get_books_form() -> str:
-    return render_template('add_book.html')
+   return render_template('add_book.html')
 
 
 if __name__ == '__main__':
