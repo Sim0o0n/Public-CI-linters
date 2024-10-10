@@ -1,0 +1,11 @@
+--Для покупателей, которые сделали заказ напрямую (без помощи менеджеров), выведите имена и номера заказов.
+
+SELECT
+    c.full_name AS customer_name,
+    o.order_no
+FROM
+    "order" o
+JOIN
+    customer c ON o.customer_id = c.customer_id
+WHERE
+    o.manager_id IS NULL;
