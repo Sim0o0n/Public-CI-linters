@@ -1,38 +1,67 @@
-from flask import Flask, request
-from flask_restful import Api, Resource
-from marshmallow import ValidationError
-
+from flask import request
+from flask_restful import Resource, Api
 from models import (
-    DATA,
-    get_all_books,
-    init_db,
-    add_book,
+    get_author_by_id, add_author, delete_author_by_id, get_books_by_author_id,
+    add_book, get_book_by_id, update_book_by_id, delete_book_by_id
 )
-from schemas import BookSchema
+from schemas import AuthorSchema, BookSchema
 
-app = Flask(__name__)
-api = Api(app)
+author_schema = AuthorSchema()
+book_schema = BookSchema()
 
+class AuthorListResource(Resource):
+    def post(self):
+        data = request.get_json()
+        errors = author_schema.validate(data)
+        if errors:
+            return {"message": "Validation errors", "errors": errors}, 400
 
-class BookList(Resource):
-    def get(self) -> tuple[list[dict], int]:
-        schema = BookSchema()
-        return schema.dump(get_all_books(), many=True), 200
+        author = add_author(data['first_name'], data['last_name'], data.get('middle_name'))
+        return author_schema.dump(author), 201
 
-    def post(self) -> tuple[dict, int]:
-        data = request.json
-        schema = BookSchema()
-        try:
-            book = schema.load(data)
-        except ValidationError as exc:
-            return exc.messages, 400
+class AuthorResource(Resource):
+    def get(self, author_id):
+        author = get_author_by_id(author_id)
+        if not author:
+            return {"message": "Author not found"}, 404
 
-        book = add_book(book)
-        return schema.dump(book), 201
+        books = get_books_by_author_id(author_id)
+        return {
+            "author": author_schema.dump(author),
+            "books": book_schema.dump(books, many=True)
+        }
 
+    def delete(self, author_id):
+        author = get_author_by_id(author_id)
+        if not author:
+            return {"message": "Author not found"}, 404
 
-api.add_resource(BookList, '/api/books')
+        delete_author_by_id(author_id)
+        return {"message": "Author and their books deleted"}, 200
 
-if __name__ == '__main__':
-    init_db(initial_records=DATA)
-    app.run(debug=True)
+class BookResource(Resource):
+    def get(self, book_id):
+        book = get_book_by_id(book_id)
+        if not book:
+            return {"message": "Book not found"}, 404
+        return book_schema.dump(book), 200
+
+    def put(self, book_id):
+        data = request.get_json()
+        errors = book_schema.validate(data)
+        if errors:
+            return {"message": "Validation errors", "errors": errors}, 400
+
+        updated_book = update_book_by_id(book_id, data['title'], data['author_id'])
+        if not updated_book:
+            return {"message": "Book not found"}, 404
+
+        return book_schema.dump(updated_book), 200
+
+    def delete(self, book_id):
+        book = get_book_by_id(book_id)
+        if not book:
+            return {"message": "Book not found"}, 404
+
+        delete_book_by_id(book_id)
+        return {"message": "Book deleted"}, 200
