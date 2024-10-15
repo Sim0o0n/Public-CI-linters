@@ -1,10 +1,13 @@
-from flask import request
-from flask_restful import Resource, Api
+from flask import Flask, request
+from flask_restful import Api, Resource
 from models import (
     get_author_by_id, add_author, delete_author_by_id, get_books_by_author_id,
     add_book, get_book_by_id, update_book_by_id, delete_book_by_id
 )
 from schemas import AuthorSchema, BookSchema
+
+app = Flask(__name__)
+api = Api(app)
 
 author_schema = AuthorSchema()
 book_schema = BookSchema()
@@ -65,3 +68,11 @@ class BookResource(Resource):
 
         delete_book_by_id(book_id)
         return {"message": "Book deleted"}, 200
+
+# добавил URL
+api.add_resource(AuthorListResource, '/authors')
+api.add_resource(AuthorResource, '/authors/<int:author_id>')
+api.add_resource(BookResource, '/books/<int:book_id>')
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
