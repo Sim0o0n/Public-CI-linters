@@ -1,0 +1,68 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Authors API",
+    "version": "1.0",
+    "description": "API для работы с авторами"
+  },
+  "paths": {
+    "/api/authors": {
+      "get": {
+        "summary": "Получить список всех авторов",
+        "responses": {
+          "200": {
+            "description": "Список всех авторов",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Author"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Добавить нового автора",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Author"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Автор успешно добавлен"
+          },
+          "400": {
+            "description": "Ошибка валидации"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Author": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Herman Melville"
+          }
+        }
+      }
+    }
+  }
+}
