@@ -3,7 +3,7 @@ from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 
-from config import SMTP_HOST, SMTP_PORT, SMTP_PASSWORD, SMTP_USER
+from .config import SMTP_HOST, SMTP_PORT, SMTP_PASSWORD, SMTP_USER
 
 
 def send_email(order_id: str, receiver: str, filename: str):
