@@ -1,9 +1,11 @@
 import sys
 from utils import string_to_operator
+from logger_helper import LevelFileHandler
 import logging
 
+
 def conf_logger():
-    logger = logging.getLogger('hw1_app_logger')
+    logger = logging.getLogger('hw3_app_logger')
     logger.setLevel(logging.DEBUG)
 
     console_handler = logging.StreamHandler()
@@ -12,15 +14,22 @@ def conf_logger():
     file_handler = logging.FileHandler("app_errors.log")
     file_handler.setLevel(logging.ERROR)
 
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    debug_file_handler = LevelFileHandler(logging.DEBUG, 'calc_debug.log')
+    error_file_handler = LevelFileHandler(logging.ERROR, 'calc_error.log')
+
+    formatter = logging.Formatter('%(levelname)s | %(name)s | %(asctime)s | %(lineno)d | %(message)s')
     console_handler.setFormatter(formatter)
     file_handler.setFormatter(formatter)
+    debug_file_handler.setFormatter(formatter)
+    error_file_handler.setFormatter(formatter)
 
     logger.addHandler(console_handler)
     logger.addHandler(file_handler)
+    logger.addHandler(debug_file_handler)
+    logger.addHandler(error_file_handler)
 
 def calc(args):
-    logger = logging.getLogger('hw1_app_logger')
+    logger = logging.getLogger('hw3_app_logger')
     logger.info(f"Arguments: {args}")
 
     num_1 = args[0]
@@ -43,7 +52,8 @@ def calc(args):
 
     result = operator_func(num_1, num_2)
 
-    logger.info(f"Result:{result}")
+
+    logger.info(f"Result: {result}")
     logger.debug(f"{num_1} {operator} {num_2} = {result}")
 
 
@@ -52,8 +62,7 @@ if __name__ == '__main__':
     try:
         calc(sys.argv[1:])
     except Exception as e:
-        logger = logging.getLogger('hw1_app_logger')
+        logger = logging.getLogger('hw3_app_logger')
         logger.error("An error occurred while executing the calculation")
         logger.exception(e)
-
     calc('2+3')

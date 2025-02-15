@@ -1,9 +1,15 @@
+import contextlib
 import sys
 from utils import string_to_operator
 import logging
+import logging_tree
+
+class ASCIIFilter(logging.Filter):
+    def filter(self, record):
+        return record.getMessage().isascii()
 
 def conf_logger():
-    logger = logging.getLogger('hw1_app_logger')
+    logger = logging.getLogger('hw7_app_logger')
     logger.setLevel(logging.DEBUG)
 
     console_handler = logging.StreamHandler()
@@ -16,11 +22,15 @@ def conf_logger():
     console_handler.setFormatter(formatter)
     file_handler.setFormatter(formatter)
 
+    ascii_filter = ASCIIFilter()
+    console_handler.addFilter(ascii_filter)
+    file_handler.addFilter(ascii_filter)
+
     logger.addHandler(console_handler)
     logger.addHandler(file_handler)
 
 def calc(args):
-    logger = logging.getLogger('hw1_app_logger')
+    logger = logging.getLogger('hw7_app_logger')
     logger.info(f"Arguments: {args}")
 
     num_1 = args[0]
@@ -49,11 +59,9 @@ def calc(args):
 
 if __name__ == '__main__':
     conf_logger()
-    try:
-        calc(sys.argv[1:])
-    except Exception as e:
-        logger = logging.getLogger('hw1_app_logger')
-        logger.error("An error occurred while executing the calculation")
-        logger.exception(e)
 
-    calc('2+3')
+    with open("logging_tree.txt", "w") as f:
+        with contextlib.redirect_stdout(f):
+            logging_tree.printout()
+
+    calc(['2', '+', '3'])

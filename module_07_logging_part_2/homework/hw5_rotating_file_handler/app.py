@@ -3,7 +3,7 @@ from utils import string_to_operator
 import logging
 
 def conf_logger():
-    logger = logging.getLogger('hw1_app_logger')
+    logger = logging.getLogger('hw5_app_logger')
     logger.setLevel(logging.DEBUG)
 
     console_handler = logging.StreamHandler()
@@ -20,7 +20,7 @@ def conf_logger():
     logger.addHandler(file_handler)
 
 def calc(args):
-    logger = logging.getLogger('hw1_app_logger')
+    logger = logging.getLogger('hw5_app_logger')
     logger.info(f"Arguments: {args}")
 
     num_1 = args[0]
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     try:
         calc(sys.argv[1:])
     except Exception as e:
-        logger = logging.getLogger('hw1_app_logger')
+        logger = logging.getLogger('hw5_app_logger')
         logger.error("An error occurred while executing the calculation")
         logger.exception(e)
 

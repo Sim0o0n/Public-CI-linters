@@ -1,9 +1,16 @@
+import contextlib
 import sys
-from utils import string_to_operator
 import logging
+import logging_tree
+from logging.handlers import HTTPHandler
+from utils import string_to_operator
+
+class ASCIIFilter(logging.Filter):
+    def filter(self, record):
+        return record.getMessage().isascii()
 
 def conf_logger():
-    logger = logging.getLogger('hw1_app_logger')
+    logger = logging.getLogger('hw8_app_logger')
     logger.setLevel(logging.DEBUG)
 
     console_handler = logging.StreamHandler()
@@ -12,15 +19,29 @@ def conf_logger():
     file_handler = logging.FileHandler("app_errors.log")
     file_handler.setLevel(logging.ERROR)
 
+    http_handler = HTTPHandler(
+        host='localhost:5000',
+        url='/log',
+        method='POST',
+    )
+    http_handler.setLevel(logging.DEBUG)
+
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     console_handler.setFormatter(formatter)
     file_handler.setFormatter(formatter)
+    http_handler.setFormatter(formatter)
+
+    ascii_filter = ASCIIFilter()
+    console_handler.addFilter(ascii_filter)
+    file_handler.addFilter(ascii_filter)
+    http_handler.addFilter(ascii_filter)
 
     logger.addHandler(console_handler)
     logger.addHandler(file_handler)
+    logger.addHandler(http_handler)
 
 def calc(args):
-    logger = logging.getLogger('hw1_app_logger')
+    logger = logging.getLogger('hw8_app_logger')
     logger.info(f"Arguments: {args}")
 
     num_1 = args[0]
@@ -43,17 +64,14 @@ def calc(args):
 
     result = operator_func(num_1, num_2)
 
-    logger.info(f"Result:{result}")
+    logger.info(f"Result: {result}")
     logger.debug(f"{num_1} {operator} {num_2} = {result}")
-
 
 if __name__ == '__main__':
     conf_logger()
-    try:
-        calc(sys.argv[1:])
-    except Exception as e:
-        logger = logging.getLogger('hw1_app_logger')
-        logger.error("An error occurred while executing the calculation")
-        logger.exception(e)
 
-    calc('2+3')
+    with open("logging_tree.txt", "w") as f:
+        with contextlib.redirect_stdout(f):
+            logging_tree.printout()
+
+    calc(['2', '+', '3'])
