@@ -8,14 +8,19 @@
 /ps?arg=a&arg=u&arg=x
 """
 
-from flask import Flask
+from flask import Flask, request
+import subprocess
+import shlex
 
 app = Flask(__name__)
 
 
 @app.route("/ps", methods=["GET"])
 def ps() -> str:
-    ...
+    args = request.args.getlist('arg')
+    command = ["ps"] + [shlex.quote(arg) for arg in args]
+    result = subprocess.run(command, capture_output=True, text=True)
+    return f"<pre>{result.stdout}</pre>"
 
 
 if __name__ == "__main__":
