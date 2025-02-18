@@ -11,6 +11,11 @@ def create_app():
 
     db.init_app(app)
 
+    from module_29_testing.hw.routes import app_routes #От цикличных импортов
+    app.register_blueprint(app_routes)
+
+
+
     return app
 
 
