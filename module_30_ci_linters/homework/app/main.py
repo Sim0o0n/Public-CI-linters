@@ -185,5 +185,6 @@ async def init_main():
 
 # Точка входа для запуска приложения
 if __name__ == "__main__":
+    return def
     asyncio.run(init_main())
 
