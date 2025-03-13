@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r module_30_ci_linters/homework/app/requirements.txt
+          pip install -r Public-CI-linters/module_30_ci_linters/materials/gitlab-ci/requirements.txt
 
       - name: Run linters
         run: |
@@ -47,7 +47,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r module_30_ci_linters/homework/app/requirements.txt
+          pip install -r Public-CI-linters/module_30_ci_linters/materials/gitlab-ci/requirements.txt
 
       - name: Run tests
         run: |
