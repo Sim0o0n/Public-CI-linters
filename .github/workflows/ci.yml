@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - module-30
+  pull_request:
+    branches:
+      - module-30
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.7'
+      - name: Install dependencies
+        run: pip install -r module_30_ci_linters/homework/requirements.txt
+
+  mypy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.7'
+      - name: Install dependencies
+        run: pip install -r module_30_ci_linters/homework/requirements.txt
+      - name: Run mypy
+        run: mypy module_30_ci_linters/homework/app/
+
+  black:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.7'
+      - name: Install dependencies
+        run: pip install -r module_30_ci_linters/homework/requirements.txt
+      - name: Run black
+        run: black --diff --check module_30_ci_linters/homework/app/
+
+  isort:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.7'
+      - name: Install dependencies
+        run: pip install -r module_30_ci_linters/homework/requirements.txt
+      - name: Run isort
+        run: isort --check-only module_30_ci_linters/homework/app/
+
+  flake8:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.7'
+      - name: Install dependencies
+        run: pip install -r module_30_ci_linters/homework/requirements.txt
+      - name: Run flake8
+        run: flake8 module_30_ci_linters/homework/app/
+
