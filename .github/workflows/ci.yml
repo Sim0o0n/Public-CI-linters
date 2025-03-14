@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: '3.10'
       - name: Install dependencies
-        run: pip install -r module_30_ci_linters/homework/requirements.txt
+        run: pip install -r module_30_ci_linters/materials/linters/requirements.txt
 
   mypy:
     runs-on: ubuntu-latest
@@ -29,7 +29,7 @@ jobs:
         with:
           python-version: '3.10'
       - name: Install dependencies
-        run: pip install -r module_30_ci_linters/homework/requirements.txt
+        run: pip install -r module_30_ci_linters/materials/linters/requirements.txt
       - name: Run mypy
         run: mypy module_30_ci_linters/homework/app/
 
@@ -42,7 +42,7 @@ jobs:
         with:
           python-version: '3.10'
       - name: Install dependencies
-        run: pip install -r module_30_ci_linters/homework/requirements.txt
+        run: pip install -r module_30_ci_linters/materials/linters/requirements.txt
       - name: Run black
         run: black --diff --check module_30_ci_linters/homework/app/
 
@@ -55,7 +55,7 @@ jobs:
         with:
           python-version: '3.10'
       - name: Install dependencies
-        run: pip install -r module_30_ci_linters/homework/requirements.txt
+        run: pip install -r module_30_ci_linters/materials/linters/requirements.txt
       - name: Run isort
         run: isort --check-only module_30_ci_linters/homework/app/
 
@@ -68,7 +68,7 @@ jobs:
         with:
           python-version: '3.10'
       - name: Install dependencies
-        run: pip install -r module_30_ci_linters/homework/requirements.txt
+        run: pip install -r module_30_ci_linters/materials/linters/requirements.txt
       - name: Run flake8
         run: flake8 module_30_ci_linters/homework/app/
         
