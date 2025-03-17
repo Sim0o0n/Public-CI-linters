@@ -2,7 +2,7 @@ import asyncio
 from fastapi import FastAPI, Depends, HTTPException, Request
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, declarative_base
-from models import Table1, Table2, Base
+from module_30_ci_linters.homework.app.models import Table1, Table2, Base
 from sqlalchemy.future import select
 from sqlalchemy import desc, asc
 from pydantic import ValidationError
