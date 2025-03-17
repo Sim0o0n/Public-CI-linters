@@ -9,4 +9,3 @@ sqlalchemy
 pydantic
 aiosqlite
 sqlalchemy-stubs
-pydantic-stubs
