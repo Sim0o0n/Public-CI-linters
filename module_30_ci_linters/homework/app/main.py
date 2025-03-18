@@ -7,7 +7,7 @@ from sqlalchemy.future import select
 from sqlalchemy import desc, asc
 from pydantic import ValidationError
 from fastapi.responses import JSONResponse
-from module_26_fastapi.homework.app.schemas import CookBook
+from module_30_ci_linters.homework.app.schemas import CookBook
 
 # Создание экземпляра FastAPI
 app = FastAPI()
