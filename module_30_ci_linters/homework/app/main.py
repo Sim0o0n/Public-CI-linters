@@ -19,9 +19,6 @@ database_url = "sqlite+aiosqlite:///cookbook.db"
 engine = create_async_engine(database_url, echo=True)
 # Создание сессии для работы с базой данных
 async_session = sessionmaker(AsyncSession, bind=engine, expire_on_commit=False)
-# Базовый класс для объявляемых моделей
-class Base(DeclarativeBase):
-    pass
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
