@@ -154,7 +154,7 @@ async def delete_recipe(recipe_id: str, db: AsyncSession = Depends(get_db)):
     Raises:
         HTTPException: Если рецепт с указанным ID не найден (404).
     """
-    result = await db.execute(select(Table2).where(Table2.name_recipe == recipe_id))
+    result = await db.execute(select(Table2).filter(Table2.name_recipe == recipe_id))
     recipe = result.scalar_one_or_none()
 
     if recipe is None:
@@ -163,7 +163,7 @@ async def delete_recipe(recipe_id: str, db: AsyncSession = Depends(get_db)):
     await db.delete(recipe)
     await db.commit()
 
-    result_table1 = await db.execute(select(Table1).where(Table1.title == recipe_id))
+    result_table1 = await db.execute(select(Table1).filter(Table1.title == recipe_id))
     recipe_table1 = result_table1.scalar_one_or_none()
 
     if recipe_table1:
