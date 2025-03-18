@@ -5,6 +5,6 @@ flake8-pie
 isort
 mypy
 fastapi
-sqlalchemy==1.4.26
+sqlalchemy
 pydantic
 aiosqlite
