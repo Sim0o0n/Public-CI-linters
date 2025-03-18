@@ -1,7 +1,7 @@
 import asyncio
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.asyncio import create_async_engine
-sqlalchemy.ext.declarative import declarative_base
+sqlalchemy.orm import declarative_base
 
 # URL подключения к базе данных
 database_url = "sqlite+aiosqlite:///cookbook.db"
