@@ -6,7 +6,9 @@ from sqlalchemy.ext.declarative import declarative_base
 # URL подключения к базе данных
 database_url = "sqlite+aiosqlite:///cookbook.db"
 engine = create_async_engine(database_url, echo=True)
-Base = declarative_base()
+
+class Base(DeclarativeBase):
+    pass
 
 class Table1(Base):
     """
