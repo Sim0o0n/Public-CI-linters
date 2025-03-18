@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r module_30_ci_linters/materials/linters/requirements.txt
       - name: Run mypy
-        run: mypy module_30_ci_linters/homework/app/
+        run: mypy --explicit-package-bases module_30_ci_linters/homework/app/
 
   black:
     runs-on: ubuntu-latest
