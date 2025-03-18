@@ -8,4 +8,3 @@ fastapi
 sqlalchemy==1.4.26
 pydantic
 aiosqlite
-sqlalchemy-stubs
