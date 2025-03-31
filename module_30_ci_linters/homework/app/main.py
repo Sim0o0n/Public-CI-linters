@@ -31,7 +31,7 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
     Yields:
         AsyncSession: Асинхронная сессия базы данных.
     """
-    async with async_session() as session:
+    async with SessionLocal() as session:
         yield session
 
 
@@ -83,7 +83,7 @@ async def get_inf(recipe_id: str, db: AsyncSession = Depends(get_db)):
         )
         recipe_record = result_table1.scalars().first()
         if recipe_record:
-            recipe_record.views = int(recipe_record.views) + 1
+            setattr(recipe_record, "views", recipe_record.views + 1)
             await db.commit()
     except Exception as e:
         print(f"Ошибка при обновлении счетчика просмотров: {e}")
