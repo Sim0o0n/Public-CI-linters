@@ -2,6 +2,7 @@ import asyncio
 from fastapi import FastAPI, Depends, HTTPException, Request
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from .models import Table1, Table2, Base
 from sqlalchemy.future import select
 from sqlalchemy import desc, asc
@@ -20,6 +21,7 @@ engine = create_async_engine(database_url, echo=True)
 # Создание сессии для работы с базой данных
 SessionLocal = async_sessionmaker(engine, class_=AsyncSession, autoflush=False)
 
+
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """
     Создает асинхронную сессию базы данных.
@@ -31,6 +33,7 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """
     async with SessionLocal() as session:
         yield session
+
 
 @app.get("/recipes")
 async def get_recipes(db: AsyncSession = Depends(get_db)):
@@ -50,6 +53,7 @@ async def get_recipes(db: AsyncSession = Depends(get_db)):
     )
     records = result.scalars().all()
     return records
+
 
 @app.get("/recipes/{recipe_id}")
 async def get_inf(recipe_id: str, db: AsyncSession = Depends(get_db)):
@@ -79,12 +83,13 @@ async def get_inf(recipe_id: str, db: AsyncSession = Depends(get_db)):
         )
         recipe_record = result_table1.scalars().first()
         if recipe_record:
-            recipe_record.views += 1  # Увеличение счетчика
+            setattr(recipe_record, "views", recipe_record.views + 1)
             await db.commit()
     except Exception as e:
         print(f"Ошибка при обновлении счетчика просмотров: {e}")
 
     return records
+
 
 @app.post("/create_recipes")
 async def record_recipe(recipe: CookBook, db: AsyncSession = Depends(get_db)):
@@ -99,7 +104,7 @@ async def record_recipe(recipe: CookBook, db: AsyncSession = Depends(get_db)):
         dict: Сообщение об успешном создании рецепта.
     """
     new_recipe_to_table2 = Table2(**recipe.model_dump())
-    await db.add(new_recipe_to_table2)  # Убедитесь, что используете await
+    db.add(new_recipe_to_table2)
     await db.commit()
 
     table1_data = {
@@ -108,10 +113,11 @@ async def record_recipe(recipe: CookBook, db: AsyncSession = Depends(get_db)):
         "cooking_time": recipe.cooking_time
     }
     new_recipe_to_table1 = Table1(**table1_data)
-    await db.add(new_recipe_to_table1)  # Убедитесь, что используете await
+    db.add(new_recipe_to_table1)
     await db.commit()
 
     return {"message": "Рецепт успешно создан.", "data": recipe}
+
 
 @app.exception_handler(ValidationError)
 async def validation_exception_handler(request: Request, exc: ValidationError):
@@ -130,6 +136,7 @@ async def validation_exception_handler(request: Request, exc: ValidationError):
         content={"detail": exc.errors(),
                  "reason": "Ошибка валидации данных ввода"},
     )
+
 
 @app.delete("/delete_recipe/{recipe_id}")
 async def delete_recipe(recipe_id: str, db: AsyncSession = Depends(get_db)):
@@ -165,6 +172,7 @@ async def delete_recipe(recipe_id: str, db: AsyncSession = Depends(get_db)):
 
     return {"message": "Рецепт успешно удалён."}
 
+
 async def init_main():
     """
     Инициализирует базу данных, создавая все таблицы.
@@ -173,6 +181,7 @@ async def init_main():
     """
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
 
 # Точка входа для запуска приложения
 if __name__ == "__main__":
