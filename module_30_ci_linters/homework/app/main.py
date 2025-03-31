@@ -1,6 +1,7 @@
 import asyncio
 from fastapi import FastAPI, Depends, HTTPException, Request
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from .models import Table1, Table2, Base
 from sqlalchemy.future import select
@@ -82,7 +83,7 @@ async def get_inf(recipe_id: str, db: AsyncSession = Depends(get_db)):
         )
         recipe_record = result_table1.scalars().first()
         if recipe_record:
-            recipe_record.views += 1
+            recipe_record.views = int(recipe_record.views) + 1
             await db.commit()
     except Exception as e:
         print(f"Ошибка при обновлении счетчика просмотров: {e}")
