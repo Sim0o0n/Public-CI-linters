@@ -25,7 +25,8 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """
     Создает асинхронную сессию базы данных.
 
-    Используется в зависимости для маршрутов, которые требуют доступ к базе данных.
+    Используется в зависимости для маршрутов, которые требуют доступ
+    к базе данных.
 
     Yields:
         AsyncSession: Асинхронная сессия базы данных.
@@ -39,7 +40,8 @@ async def get_recipes(db: AsyncSession = Depends(get_db)):
     """
     Получает список всех рецептов.
 
-    Рецепты сортируются по количеству просмотров (по убыванию) и времени приготовления (по возрастанию).
+    Рецепты сортируются по количеству просмотров (по убыванию) и
+    времени приготовления (по возрастанию).
 
     Args:
         db (AsyncSession): Асинхронная сессия базы данных.
@@ -71,7 +73,9 @@ async def get_inf(recipe_id: str, db: AsyncSession = Depends(get_db)):
     Raises:
         HTTPException: Если рецепт с указанным ID не найден (404).
     """
-    result_table2 = await db.execute(select(Table2).where(Table2.name_recipe.contains(recipe_id)))
+    result_table2 = await db.execute(
+        select(Table2).where(Table2.name_recipe.contains(recipe_id))
+    )
     records = result_table2.scalars().all()
     if not records:
         raise HTTPException(status_code=404, detail=f"Рецепт с ID {recipe_id} не найден.")
@@ -184,6 +188,7 @@ async def init_main():
 # Точка входа для запуска приложения
 if __name__ == "__main__":
     asyncio.run(init_main())
+
 
 
 
