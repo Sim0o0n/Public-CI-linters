@@ -14,16 +14,10 @@ class CookBook(BaseModel):
     """
 
     id: int
-    name_recipe: str = Field(
-        max_length=40, description="Название рецепта (не больше 40 символов)"
-    )
+    name_recipe: str = Field(max_length=40, description="Название рецепта (не больше 40 символов)")
     cooking_time: int = Field(description="Время приготовления (в минутах)")
-    list_ingredients: str = Field(
-        description="Список ингредиентов (ввод осуществляется через пробел)"
-    )
-    description: str = Field(
-        max_length=100, description="Небольшое описание (не более 100 символов)"
-    )
+    list_ingredients: str = Field(description="Список ингредиентов (ввод осуществляется через пробел)")
+    description: str = Field(max_length=100, description="Небольшое описание (не более 100 символов)")
 
     @field_validator("list_ingredients", mode="before")
     def convert_ingredients(cls, value: str) -> str:
@@ -45,5 +39,6 @@ class CookBook(BaseModel):
             ingredients_list = value.split()
             return ", ".join(ingredients_list)
         return value
+
 
 
