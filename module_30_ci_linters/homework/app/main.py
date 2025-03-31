@@ -1,14 +1,16 @@
 import asyncio
-from fastapi import FastAPI, Depends, HTTPException, Request
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.ext.asyncio import async_sessionmaker
-from .models import Table1, Table2, Base
-from sqlalchemy.future import select
-from sqlalchemy import desc, asc
-from pydantic import ValidationError
+
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
+from sqlalchemy.future import select
+from sqlalchemy import asc, desc
+
+from .models import Base, Table1, Table2
 from .schemas import CookBook
+from pydantic import ValidationError
 from typing import AsyncGenerator
+
 
 # Создание экземпляра FastAPI
 app = FastAPI()
