@@ -7,8 +7,10 @@ from sqlalchemy.orm import DeclarativeBase
 database_url = "sqlite+aiosqlite:///cookbook.db"
 engine = create_async_engine(database_url, echo=True)
 
+
 class Base(DeclarativeBase):
     pass
+
 
 class Table1(Base):
     """
@@ -21,12 +23,13 @@ class Table1(Base):
         cooking_time (int): Время приготовления рецепта в минутах.
     """
 
-    __tablename__ = 'name_list_recipes'
+    __tablename__ = "name_list_recipes"
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False, index=True)
     views = Column(Integer, default=0, nullable=False)
     cooking_time = Column(Integer, nullable=False)
+
 
 class Table2(Base):
     """
@@ -40,13 +43,14 @@ class Table2(Base):
         description (str): Описание рецепта.
     """
 
-    __tablename__ = 'full_info_recipes'
+    __tablename__ = "full_info_recipes"
 
     id = Column(Integer, primary_key=True, index=True)
     name_recipe = Column(String, nullable=False)
     cooking_time = Column(Integer, nullable=False)
     list_ingredients = Column(String, nullable=False)
     description = Column(String, nullable=False)
+
 
 async def init_db():
     """
@@ -58,6 +62,8 @@ async def init_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
+
 if __name__ == "__main__":
     asyncio.run(init_db())
+
 
