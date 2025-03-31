@@ -164,7 +164,7 @@ result = await db.execute(
                          == recipe_id)
 )
 
-    recipe = result.scalar_one_or_none()
+recipe = result.scalar_one_or_none()
 
     if recipe is None:
         raise HTTPException(status_code=404, 
