@@ -1,7 +1,8 @@
 import asyncio
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.future import select
 from sqlalchemy import asc, desc
 from pydantic import ValidationError
@@ -87,7 +88,6 @@ async def get_inf(recipe_id: str, db: AsyncSession = Depends(get_db)):
         )
         recipe_record = result_table1.scalars().first()
         if recipe_record:
-            # Используем setattr для увеличения счетчика просмотров
             setattr(recipe_record, "views", recipe_record.views + 1)
             await db.commit()
     except Exception as e:
@@ -109,7 +109,7 @@ async def record_recipe(recipe: CookBook, db: AsyncSession = Depends(get_db)):
         dict: Сообщение об успешном создании рецепта.
     """
     new_recipe_to_table2 = Table2(**recipe.model_dump())
-    await db.merge(new_recipe_to_table2)  # Используем merge
+    await db.merge(new_recipe_to_table2)
     await db.commit()
 
     table1_data = {
@@ -118,7 +118,7 @@ async def record_recipe(recipe: CookBook, db: AsyncSession = Depends(get_db)):
         "cooking_time": recipe.cooking_time,
     }
     new_recipe_to_table1 = Table1(**table1_data)
-    await db.merge(new_recipe_to_table1)  # Используем merge
+    await db.merge(new_recipe_to_table1)
     await db.commit()
 
     return {"message": "Рецепт успешно создан.", "data": recipe}
@@ -192,6 +192,7 @@ async def init_main():
 # Точка входа для запуска приложения
 if __name__ == "__main__":
     asyncio.run(init_main())
+
 
 
 
