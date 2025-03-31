@@ -99,7 +99,7 @@ async def record_recipe(recipe: CookBook, db: AsyncSession = Depends(get_db)):
         dict: Сообщение об успешном создании рецепта.
     """
     new_recipe_to_table2 = Table2(**recipe.model_dump())
-    await db.add(new_recipe_to_table2)  # Убираем присвоение
+    await db.merge(new_recipe_to_table2)  # .
     await db.commit()
 
     table1_data = {
@@ -108,7 +108,7 @@ async def record_recipe(recipe: CookBook, db: AsyncSession = Depends(get_db)):
         "cooking_time": recipe.cooking_time,
     }
     new_recipe_to_table1 = Table1(**table1_data)
-    await db.add(new_recipe_to_table1)  # Убираем присвоение
+    await db.merge(new_recipe_to_table1)  # .
     await db.commit()
 
     return {"message": "Рецепт успешно создан.", "data": recipe}
