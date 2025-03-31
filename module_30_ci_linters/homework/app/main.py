@@ -80,7 +80,7 @@ async def get_inf(recipe_id: str, db: AsyncSession = Depends(get_db)):
         recipe_record = result_table1.scalars().first()
         if recipe_record:
             recipe_record.views += 1  # Увеличиваем количество просмотров
-            await db.commit()  # Здесь мы просто вызываем commit() без присвоения
+            await db.commit()  # Просто вызываем commit без присвоения
     except Exception as e:
         print(f"Ошибка при обновлении счетчика просмотров: {e}")
 
