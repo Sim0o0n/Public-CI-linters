@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field, field_validator
 
+
 class CookBook(BaseModel):
     """
     Модель для представления рецепта в кулинарной книге.
@@ -36,6 +37,6 @@ class CookBook(BaseModel):
         """
         if isinstance(value, str):
             ingredients_list = value.split()
-            return ', '.join(ingredients_list)
+            return ", ".join(ingredients_list)
         return value
 
