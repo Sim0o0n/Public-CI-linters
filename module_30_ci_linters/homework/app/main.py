@@ -79,7 +79,7 @@ async def get_inf(recipe_id: str, db: AsyncSession = Depends(get_db)):
         )
         recipe_record = result_table1.scalars().first()
         if recipe_record:
-            recipe_record.views += 1  # Обновляем значение счетчика просмотров
+            recipe_record.views += 1  # Увеличиваем количество просмотров
             await db.commit()
     except Exception as e:
         print(f"Ошибка при обновлении счетчика просмотров: {e}")
@@ -99,7 +99,7 @@ async def record_recipe(recipe: CookBook, db: AsyncSession = Depends(get_db)):
         dict: Сообщение об успешном создании рецепта.
     """
     new_recipe_to_table2 = Table2(**recipe.model_dump())
-    await db.add(new_recipe_to_table2)
+    await db.add(new_recipe_to_table2)  # Не присваиваем результат вызова
     await db.commit()
 
     table1_data = {
@@ -108,7 +108,7 @@ async def record_recipe(recipe: CookBook, db: AsyncSession = Depends(get_db)):
         "cooking_time": recipe.cooking_time,
     }
     new_recipe_to_table1 = Table1(**table1_data)
-    await db.add(new_recipe_to_table1)
+    await db.add(new_recipe_to_table1)  # Не присваиваем результат вызова
     await db.commit()
 
     return {"message": "Рецепт успешно создан.", "data": recipe}
@@ -176,5 +176,6 @@ async def init_main():
 # Точка входа для запуска приложения
 if __name__ == "__main__":
     asyncio.run(init_main())
+
 
 
