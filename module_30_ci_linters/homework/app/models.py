@@ -1,4 +1,5 @@
 import asyncio
+
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import DeclarativeBase
