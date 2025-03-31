@@ -7,7 +7,6 @@ from sqlalchemy.future import select
 from sqlalchemy import asc, desc
 from pydantic import ValidationError
 from typing import AsyncGenerator
-
 from .models import Base, Table1, Table2
 from .schemas import CookBook
 
