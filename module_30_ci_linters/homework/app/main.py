@@ -167,10 +167,8 @@ result = await db.execute(
     recipe = result.scalar_one_or_none()
 
     if recipe is None:
-        raise HTTPException(
-            status_code=404,
-            detail=f"Рецепт с ID {recipe_id} не найден."
-        )
+        raise HTTPException(status_code=404, 
+                            detail=f"Рецепт с ID {recipe_id} не найден.")
 
 
     await db.delete(recipe)
