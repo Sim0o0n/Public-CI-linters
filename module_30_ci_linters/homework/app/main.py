@@ -18,11 +18,8 @@ database_url = "sqlite+aiosqlite:///cookbook.db"
 # Создание асинхронного движка базы данных
 engine = create_async_engine(database_url, echo=True)
 # Создание сессии для работы с базой данных
-async_session = sessionmaker(
-    bind=engine,
-    class_=AsyncSession,
-    expire_on_commit=False
-)
+SessionLocal = async_sessionmaker(engine, class_=AsyncSession, autoflush=False)
+
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """
