@@ -1,8 +1,7 @@
 import asyncio
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.future import select
 from sqlalchemy import asc, desc
 from pydantic import ValidationError
@@ -159,17 +158,12 @@ async def delete_recipe(recipe_id: str, db: AsyncSession = Depends(get_db)):
     Raises:
         HTTPException: Если рецепт с указанным ID не найден (404).
     """
-result = await db.execute(
-    select(Table2).where(Table2.name_recipe
-                         == recipe_id)
-)
-
-recipe = result.scalar_one_or_none()
+    result = await db.execute(select(Table2).where(Table2.name_recipe == recipe_id))
+    recipe = result.scalar_one_or_none()
 
     if recipe is None:
-        raise HTTPException(status_code=404, 
+        raise HTTPException(status_code=404,
                             detail=f"Рецепт с ID {recipe_id} не найден.")
-
 
     await db.delete(recipe)
     await db.commit()
@@ -198,6 +192,7 @@ async def init_main():
 # Точка входа для запуска приложения
 if __name__ == "__main__":
     asyncio.run(init_main())
+
 
 
 
