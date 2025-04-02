@@ -4,7 +4,7 @@ from typing import AsyncGenerator
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
-from sqlalchemy import asc, desc
+from sqlalchemy import asc, desc, update
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.future import select
 
@@ -45,6 +45,7 @@ async def get_inf(recipe_id: str, db: AsyncSession = db_dependency):
         select(Table2).where(Table2.name_recipe.contains(recipe_id))
     )
     records = result_table2.scalars().all()
+
     if not records:
         raise HTTPException(
             status_code=404, detail=f"Рецепт с ID {recipe_id} не найден."
@@ -54,8 +55,13 @@ async def get_inf(recipe_id: str, db: AsyncSession = db_dependency):
         select(Table1).where(Table1.title.contains(recipe_id))
     )
     recipe_record = result_table1.scalars().first()
+
     if recipe_record:
-        recipe_record.views += 1
+        await db.execute(
+            update(Table1)
+            .where(Table1.title == recipe_record.title)
+            .values(views=recipe_record.views + 1)
+        )
         await db.commit()
 
     return records
