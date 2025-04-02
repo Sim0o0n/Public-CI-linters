@@ -95,7 +95,9 @@ async def validation_exception_handler(request: Request, exc: ValidationError):
 
 @app.delete("/delete_recipe/{recipe_id}")
 async def delete_recipe(recipe_id: str, db: AsyncSession = db_dependency):
-    result = await db.execute(select(Table2).where(Table2.name_recipe == recipe_id))  # noqa: E501
+    result = await db.execute(
+        select(Table2).where(Table2.name_recipe == recipe_id)
+    )  # noqa: E501
     recipe = result.scalar_one_or_none()
 
     if recipe is None:
@@ -106,7 +108,9 @@ async def delete_recipe(recipe_id: str, db: AsyncSession = db_dependency):
     await db.delete(recipe)
     await db.commit()
 
-    result_table1 = await db.execute(select(Table1).where(Table1.title == recipe_id))  # noqa: E501
+    result_table1 = await db.execute(
+        select(Table1).where(Table1.title == recipe_id)
+    )  # noqa: E501
     recipe_table1 = result_table1.scalar_one_or_none()
 
     if recipe_table1:
