@@ -47,4 +47,3 @@ class CookBook(BaseModel):
         return value
 
 
-
