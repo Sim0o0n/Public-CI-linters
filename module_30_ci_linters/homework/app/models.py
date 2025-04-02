@@ -24,7 +24,7 @@ class Table1(Base):
         cooking_time (int): Время приготовления рецепта в минутах.
     """
 
-    __tablename__ = "name_list_recipes"
+    tablename = "name_list_recipes"
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False, index=True)
@@ -44,7 +44,7 @@ class Table2(Base):
         description (str): Описание рецепта.
     """
 
-    __tablename__ = "full_info_recipes"
+    tablename = "full_info_recipes"
 
     id = Column(Integer, primary_key=True, index=True)
     name_recipe = Column(String, nullable=False)
