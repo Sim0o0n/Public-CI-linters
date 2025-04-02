@@ -68,6 +68,7 @@ async def get_inf(recipe_id: str, db: AsyncSession = db_dependency):
     return records
 
 
+
 @app.post("/create_recipes")
 async def record_recipe(recipe: CookBook, db: AsyncSession = db_dependency):
     new_recipe_to_table2 = Table2(**recipe.model_dump())
