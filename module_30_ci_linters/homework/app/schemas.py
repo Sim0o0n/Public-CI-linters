@@ -45,5 +45,3 @@ class CookBook(BaseModel):
             ingredients_list = value.split()
             return ", ".join(ingredients_list)
         return value
-
-
