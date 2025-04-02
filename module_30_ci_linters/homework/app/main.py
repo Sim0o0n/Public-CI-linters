@@ -5,8 +5,10 @@ from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 from sqlalchemy import asc, desc, update
+# fmt: off
 from sqlalchemy.ext.asyncio import (AsyncSession, async_sessionmaker,
                                     create_async_engine)
+# fmt: on
 from sqlalchemy.future import select
 
 from .models import Base, Table1, Table2
